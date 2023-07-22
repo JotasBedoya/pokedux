@@ -1,0 +1,17 @@
+.App {
+  margin-top: 3rem;
+}
+
+#logopoke{
+  width: 30%;
+  padding-bottom: 3rem;
+}
+
+body{
+  background-color: #1E1D1F;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
