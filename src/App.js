@@ -1,32 +1,38 @@
 import { useEffect } from 'react';
-import { Col } from 'antd'
+import { Col, Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons';
 import Searcher from './components/Searcher';
-import { getPokemon, getPokemonDetails } from './api';
-import { setPokemons } from './actions';
 import PokemonList from './components/PokemonList';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import logo from './statics/logo.svg' 
 import './App.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { fetchPokemonsWithDetails } from './slices/dataSlice';
 
 
 function App() {
 
-  const pokemons = useSelector(state => state.pokemons);
+  const pokemons = useSelector((state) => state.data.pokemons, shallowEqual);
+  
+  const loading = useSelector((state) => state.ui.loading);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchPokemons = async () => {
-      const pokemonsRes = await getPokemon();
-      const pokemonDetailed = await Promise.all(
-        pokemonsRes.map((pokemon) => getPokemonDetails(pokemon))
-        );   
-      dispatch(setPokemons(pokemonDetailed));
-    };
-
-
-    fetchPokemons();
+    dispatch(fetchPokemonsWithDetails())
   }, []);
 
+
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 150,
+        color: 'red',
+        fontWeight: 900,
+        
+      }}
+      spin
+    />
+  );
  
 
   return (
@@ -39,7 +45,10 @@ function App() {
     <Col span={8} offset={8}>
       <Searcher />
     </Col>
-    <PokemonList pokemons={pokemons}/>
+    {loading ?  <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Spin indicator={antIcon} />
+    </Col> : <PokemonList pokemons={pokemons}/> }
+    
     </div>
   );
 }

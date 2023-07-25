@@ -1,7 +1,7 @@
 import { Input } from 'antd'
 
 const Searcher = () =>{
-    return <Input.Search placeholder='Search'/>;
+    return <Input.Search placeholder='Search' style={{ marginBot: 10}}/>;
 };
 
 export default Searcher;
